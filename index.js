@@ -1,69 +1,43 @@
-let usernameInput = document.querySelector("#username");
-let passwordInput = document.querySelector("#password");
+//Sätter en cookie
 
-let registerBtn = document.querySelector("#register");
-let loginBtn = document.querySelector("#logIn");
-let logoutBtn = document.querySelector("#logout");
+let createCookie = () => {
+    document.cookie = "username=Brandon; expires=Fri, 31 Dec 2026 23:59:59 UTC; path=/; Secure; SameSite=Strict";
+}
+//Hämta cookies
 
-const registerUser = () => {
-
-    //Skapa nytt användarobjekt
-    let user = {
-            name: usernameInput.value,
-            password: passwordInput.value,
-            id: Date.now(),
-    }
-    let users;
-
-    if(localStorage.getItem("users")){
-        //Hämta users från localStorage, lägg in ny användare
-        users = JSON.parse(localStorage.getItem("users"));
-        users.push(user);
-    }
-    else {
-        users = [user]
-    }
-    //Lagra i localstorage
-    localStorage.setItem("users", JSON.stringify(users));
+let newCookie = () => {
+    document.cookie = "isSecondVisit=true; expires=Fri, 31 Dec 2026 23:59:59 UTC; path=/; Secure; SameSite=Strict";
 }
 
+console.log(document.cookie);
 
-const loginUser = () => {
-    let registeredUsers = JSON.parse(localStorage.getItem("users"));
-    let existingUser = registeredUsers.find(user => user.name === usernameInput.value && user.password === passwordInput.value);
+function getCookie(name) {
+  const cookies = document.cookie.split("; ");
+  console.log(cookies);
 
-    //Skriv ut hälsning till inloggad användare 
-    if(existingUser){
-        //Lagra användare i sessionStorage
-        sessionStorage.setItem("loggedIn", JSON.stringify(existingUser))
-        let h2 = document.createElement("h2");
-        h2.innerText = `Välkommen! Du är nu inloggad som ${existingUser.name}!`
-        document.body.append(h2);
-        
-        //Visa logga-ut knapp
-        logoutBtn.classList.remove("hidden");
-    } else {
-        alert("Misslyckad inloggning!")
+  for (let cookie of cookies) {
+    const [key, value] = cookie.split("=");
+    console.log([key, value]);
+    if (key === name) {
+      return value;
     }
+  }
+  
+  return null;
 }
 
-const logoutUser = ()=> {
-    sessionStorage.clear();
-    window.location.reload();
+console.log(getCookie("username")); // "Brandon"
+
+function setCookie(name, value, days) {
+  let cookie = `${name}=${value}; path=/`;
+
+  if (days) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    cookie += `; expires=${date.toUTCString()}`;
+  }
+
+  document.cookie = cookie;
 }
 
-registerBtn.addEventListener("click", registerUser)
-loginBtn.addEventListener("click", loginUser);
-logoutBtn.addEventListener("click", logoutUser)
-
-const onPageLoad = () => {
-    if(sessionStorage.getItem("loggedIn")){
-        const loggedInUser = JSON.parse(sessionStorage.getItem("loggedIn"));
-        let h2 = document.createElement("h2");
-        h2.innerText = `Välkommen! Du är nu inloggad som ${loggedInUser.name}!`
-        document.body.append(h2);
-        logoutBtn.classList.remove("hidden");
-    } 
-}
-
-onPageLoad();
+setCookie("isStudent", "false",);
