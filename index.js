@@ -3,10 +3,11 @@ let passwordInput = document.querySelector("#password");
 
 let registerBtn = document.querySelector("#register");
 let loginBtn = document.querySelector("#logIn");
-let logoutBtn = document.querySelector("#logOut");
+let logoutBtn = document.querySelector("#logout");
 
 const registerUser = () => {
 
+    //Skapa nytt användarobjekt
     let user = {
             name: usernameInput.value,
             password: passwordInput.value,
@@ -26,6 +27,7 @@ const registerUser = () => {
     localStorage.setItem("users", JSON.stringify(users));
 }
 
+
 const loginUser = () => {
     let registeredUsers = JSON.parse(localStorage.getItem("users"));
     let existingUser = registeredUsers.find(user => user.name === usernameInput.value && user.password === passwordInput.value);
@@ -34,23 +36,33 @@ const loginUser = () => {
     if(existingUser){
         //Lagra användare i sessionStorage
         sessionStorage.setItem("loggedIn", JSON.stringify(existingUser))
-        document.body.innerHTML += `<h2>Välkommen! Du är nu inloggad som ${existingUser.name}!</h2> `
-
+        let h2 = document.createElement("h2");
+        h2.innerText = `Välkommen! Du är nu inloggad som ${existingUser.name}!`
+        document.body.append(h2);
+        
         //Visa logga-ut knapp
         logoutBtn.classList.remove("hidden");
-        console.log(logoutBtn.classList);
     } else {
         alert("Misslyckad inloggning!")
     }
 }
 
+const logoutUser = ()=> {
+    sessionStorage.clear();
+    window.location.reload();
+}
+
 registerBtn.addEventListener("click", registerUser)
 loginBtn.addEventListener("click", loginUser);
+logoutBtn.addEventListener("click", logoutUser)
 
 const onPageLoad = () => {
     if(sessionStorage.getItem("loggedIn")){
         const loggedInUser = JSON.parse(sessionStorage.getItem("loggedIn"));
-        document.body.innerHTML += `<h2>Välkommen! Du är nu inloggad som ${loggedInUser.name}!</h2> `
+        let h2 = document.createElement("h2");
+        h2.innerText = `Välkommen! Du är nu inloggad som ${loggedInUser.name}!`
+        document.body.append(h2);
+        logoutBtn.classList.remove("hidden");
     } 
 }
 
