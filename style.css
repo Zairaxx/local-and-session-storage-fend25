@@ -6,3 +6,8 @@
     display:block;
     background:blue;
 }
+
+.todo-form {
+    padding:16px;
+    min-height:100px;
+}
